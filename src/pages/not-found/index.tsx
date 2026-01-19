@@ -1,6 +1,6 @@
 import React from "react"
 import { Result } from "antd"
 
-export const NotFoundPage = () => {
-  return <div>404 так-то</div>
+export const NotFoundPage: React.FC = () => {
+  return <Result status="404" title="404" subTitle="Страница не найдена" />
 }
