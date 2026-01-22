@@ -4,7 +4,7 @@ import { LoginParams } from '../model/types';
 export const loginRequest = async (
   params: LoginParams
 ): Promise<string> => { 
-  await axios.get('/mock-auth');
+  await axios.request({ method: "GET", url: "/fake-auth", validateStatus: () => true })
 
   return new Promise((resolve, reject) => {
     setTimeout(() => {
