@@ -1,14 +1,18 @@
-import React from "react"
-import { Button, List, Avatar } from "antd"
-import { useQuery } from "@tanstack/react-query"
+import React, { useState } from "react"
+import { Button, List, Avatar, Modal } from "antd"
+import dayjs from "dayjs"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { getUsers } from "../../entities/user/api/users"
 import { User } from "../../entities/user/model/types"
-import dayjs from "dayjs"
 import { removeToken } from "../../features/auth/model/auth"
 import { useNavigate } from "react-router-dom"
+import { UserModal } from "../../features/modal/ui/UserModal"
 
 export const UsersPage: React.FC = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<User | undefined>()
 
   const { data: users, isLoading } = useQuery({
     queryKey: ["users"],
@@ -20,7 +24,16 @@ export const UsersPage: React.FC = () => {
     navigate("/login")
   }
 
-  const handleCreateUser = () => {}
+  const handleCreateUser = () => {
+      setSelectedUser(undefined)
+      setIsModalOpen(true)
+  }
+
+  const handleEditUser = (user: User) => {
+    setSelectedUser(user)
+    setIsModalOpen(true)
+  }
+
 
   return (
     <div
@@ -55,10 +68,14 @@ export const UsersPage: React.FC = () => {
                   src={user.avatar}
                   size={40}
                   style={{ marginRight: 12, cursor: "pointer" }}
+                  onClick={() => handleEditUser(user)}
                 />
               }
               title={
-                <span style={{ fontWeight: 600, cursor: "pointer" }}>
+                <span
+                  style={{ fontWeight: 600, cursor: "pointer" }}
+                  onClick={() => handleEditUser(user)}
+                >
                   {user.name}
                 </span>
               }
@@ -77,6 +94,15 @@ export const UsersPage: React.FC = () => {
           Создать пользователя
         </Button>
       </div>
+
+      <UserModal
+        visible={isModalOpen}
+        user={selectedUser}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ["users"] })
+        }}
+      />
     </div>
   )
 }
