@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { Modal, Form, Input, Button, Space } from "antd"
 import { useMutation } from "@tanstack/react-query"
-import { createUser, updateUser } from "../api/users"
+import { createUser, updateUser, deleteUser } from "../api/users"
 import { UserModalProps } from "../model/types"
 
 export const UserModal: React.FC<UserModalProps> = ({
@@ -36,6 +36,16 @@ export const UserModal: React.FC<UserModalProps> = ({
     },
   })
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteUser(id),
+    onSuccess: () => {
+      onSuccess?.()
+      onClose()
+    },
+  })
+
+  const isLoading = mutation.isPending || deleteMutation.isPending
+
   const handleSubmit = () => {
     form
       .validateFields()
@@ -45,16 +55,20 @@ export const UserModal: React.FC<UserModalProps> = ({
       .catch(() => {})
   }
 
-  const handleDelete = () => {}
+  const handleDelete = () => {
+      if (!user) return
+
+      deleteMutation.mutate(user.id)
+  }
 
   return (
     <Modal
       open={visible}
       destroyOnHidden
       title={isEdit ? "Редактирование пользователя" : "Создание пользователя"}
-      onCancel={mutation.isPending ? undefined : onClose}
+      onCancel={isLoading ? undefined : onClose}
       footer={null}
-      maskClosable={!mutation.isPending}
+      maskClosable={!isLoading}
     >
       <Form form={form} layout="vertical">
         {isEdit && (
@@ -94,7 +108,7 @@ export const UserModal: React.FC<UserModalProps> = ({
               <Button
                 type="primary"
                 onClick={handleDelete}
-                disabled={mutation.isPending}
+                disabled={isLoading}
                 style={{ minWidth: 110 }}
               >
                 Удалить
@@ -106,7 +120,7 @@ export const UserModal: React.FC<UserModalProps> = ({
             <Button
               type="primary"
               onClick={handleSubmit}
-              loading={mutation.isPending}
+              loading={isLoading}
               style={{ minWidth: 120 }}
             >
               {isEdit ? "Сохранить" : "Создать"}
@@ -115,7 +129,7 @@ export const UserModal: React.FC<UserModalProps> = ({
             <Button
               type="primary"
               onClick={onClose}
-              disabled={mutation.isPending}
+              disabled={isLoading}
               style={{ minWidth: 110 }}
             >
               Отмена
