@@ -5,6 +5,8 @@ import { useMutation } from "@tanstack/react-query"
 import { loginRequest } from "../api/login"
 import { saveToken } from "../model/auth"
 
+import * as S from "./LoginForm.styles"
+
 const { Title } = Typography
 
 export const LoginForm: React.FC = () => {
@@ -29,13 +31,7 @@ export const LoginForm: React.FC = () => {
   }
 
   return (
-    <div
-      style={{
-        maxWidth: 320,
-        margin: "120px auto 0",
-        textAlign: "left",
-      }}
-    >
+    <S.Wrapper>
       <Title level={4} style={{ marginBottom: 24 }}>
         Авторизация
       </Title>
@@ -57,14 +53,12 @@ export const LoginForm: React.FC = () => {
           <Input.Password placeholder="Пароль" />
         </Form.Item>
 
-        <div
-          style={{ display: "flex", justifyContent: "flex-end", marginTop: 8 }}
-        >
+        <S.Actions>
           <Button type="primary" htmlType="submit" loading={isLoading}>
             Войти
           </Button>
-        </div>
+        </S.Actions>
       </Form>
-    </div>
+    </S.Wrapper>
   )
 }
