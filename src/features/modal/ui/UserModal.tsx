@@ -4,6 +4,8 @@ import { useMutation } from "@tanstack/react-query"
 import { createUser, updateUser, deleteUser } from "../api/users"
 import { UserModalProps } from "../model/types"
 
+import * as S from "./UserModal.styles"
+
 export const UserModal: React.FC<UserModalProps> = ({
   visible,
   onClose,
@@ -96,13 +98,7 @@ export const UserModal: React.FC<UserModalProps> = ({
           <Input />
         </Form.Item>
 
-        <div
-          style={{
-            marginTop: 24,
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
+        <S.Footer>
           <div>
             {isEdit && (
               <Button
@@ -116,7 +112,7 @@ export const UserModal: React.FC<UserModalProps> = ({
             )}
           </div>
 
-          <div style={{ display: "flex", columnGap: 16 }}>
+          <S.Actions>
             <Button
               type="primary"
               onClick={handleSubmit}
@@ -134,8 +130,8 @@ export const UserModal: React.FC<UserModalProps> = ({
             >
               Отмена
             </Button>
-          </div>
-        </div>
+          </S.Actions>
+        </S.Footer>
       </Form>
     </Modal>
   )

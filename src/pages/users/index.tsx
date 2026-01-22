@@ -8,6 +8,8 @@ import { removeToken } from "../../features/auth/model/auth"
 import { useNavigate } from "react-router-dom"
 import { UserModal } from "../../features/modal/ui/UserModal"
 
+import * as S from "./UsersPage.styles"
+
 export const UsersPage: React.FC = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -25,8 +27,8 @@ export const UsersPage: React.FC = () => {
   }
 
   const handleCreateUser = () => {
-      setSelectedUser(undefined)
-      setIsModalOpen(true)
+    setSelectedUser(undefined)
+    setIsModalOpen(true)
   }
 
   const handleEditUser = (user: User) => {
@@ -34,26 +36,13 @@ export const UsersPage: React.FC = () => {
     setIsModalOpen(true)
   }
 
-
   return (
-    <div
-      style={{
-        maxWidth: 900,
-        margin: "40px auto",
-        padding: "0 24px",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginBottom: 24,
-        }}
-      >
+    <S.Page>
+      <S.Header>
         <Button type="primary" onClick={handleLogout}>
           Выход
         </Button>
-      </div>
+      </S.Header>
 
       <List
         loading={isLoading}
@@ -89,11 +78,11 @@ export const UsersPage: React.FC = () => {
         )}
       />
 
-      <div style={{ marginTop: 24 }}>
+      <S.Footer>
         <Button type="primary" onClick={handleCreateUser}>
           Создать пользователя
         </Button>
-      </div>
+      </S.Footer>
 
       <UserModal
         visible={isModalOpen}
@@ -103,6 +92,6 @@ export const UsersPage: React.FC = () => {
           queryClient.invalidateQueries({ queryKey: ["users"] })
         }}
       />
-    </div>
+    </S.Page>
   )
 }
