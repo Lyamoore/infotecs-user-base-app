@@ -10,7 +10,7 @@ export const loginRequest = async (
     setTimeout(() => {
       const { login, password } = params;
 
-      if (login === '123' && password === '123') {
+      if (login === 'admin' && password === 'admin') {
         resolve('auth-token');
       } else {
         reject(new Error('Неверный логин или пароль'));
